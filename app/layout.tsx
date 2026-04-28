@@ -17,6 +17,9 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: 'Simba Supermarket',
   description: "Rwanda's Online Supermarket",
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
