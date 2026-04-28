@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useCart } from '@/lib/cartContext';
+import { useTranslation } from '@/lib/i18n';
 
 interface DeliveryDetails {
   fullName: string;
@@ -22,6 +23,7 @@ export default function CheckoutStep2({
   onSuccess,
 }: CheckoutStep2Props) {
   const { state } = useCart();
+  const { t } = useTranslation();
   const [pin, setPin] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -69,23 +71,23 @@ export default function CheckoutStep2({
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Payment failed');
+        setError(data.error || t.checkout.networkError);
         setIsProcessing(false);
         setProgress(0);
         return;
       }
     } catch {
-      setError('Network error. Please try again.');
+      setError(t.checkout.networkError);
       setIsProcessing(false);
       setProgress(0);
     }
   };
 
+  const formatPrice = (price: number) => price.toLocaleString('en-RW');
+
   return (
     <div className="rounded-2xl bg-white p-6 shadow-lg">
-      <h2 className="mb-6 text-lg font-bold text-simba-dark">
-        MTN MoMo Payment
-      </h2>
+      <h2 className="mb-6 text-lg font-bold text-simba-dark">{t.checkout.paymentTitle}</h2>
 
       <div className="mb-6 space-y-3 rounded-xl bg-simba-cream p-4">
         <h3 className="font-medium text-simba-dark">Order Summary</h3>
@@ -100,21 +102,21 @@ export default function CheckoutStep2({
           </div>
         ))}
         <div className="flex justify-between border-t border-stone-200 pt-2 text-sm">
-          <span className="text-stone-600">Subtotal</span>
+          <span className="text-stone-600">{t.cart.subtotal}</span>
           <span className="text-simba-dark">
-            {subtotal.toLocaleString('en-RW')} RWF
+            {formatPrice(subtotal)} RWF
           </span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-stone-600">Delivery</span>
+          <span className="text-stone-600">{t.checkout.deliveryFee}</span>
           <span className="text-simba-dark">
-            {DELIVERY_FEE.toLocaleString('en-RW')} RWF
+            {formatPrice(DELIVERY_FEE)} RWF
           </span>
         </div>
         <div className="flex justify-between border-t border-stone-200 pt-2 font-bold">
-          <span className="text-simba-dark">Total</span>
+          <span className="text-simba-dark">{t.checkout.total}</span>
           <span className="text-simba-orange">
-            {grandTotal.toLocaleString('en-RW')} RWF
+            {formatPrice(grandTotal)} RWF
           </span>
         </div>
       </div>
@@ -128,7 +130,7 @@ export default function CheckoutStep2({
       <div className="space-y-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-simba-dark">
-            Phone Number
+            {t.checkout.fields.phone}
           </label>
           <input
             type="tel"
@@ -140,7 +142,7 @@ export default function CheckoutStep2({
 
         <div>
           <label className="mb-1 block text-sm font-medium text-simba-dark">
-            PIN (4 digits)
+            {t.checkout.fields.pin}
           </label>
           <input
             type="password"
@@ -148,7 +150,7 @@ export default function CheckoutStep2({
             value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
             className="w-full rounded-xl border border-stone-200 px-4 py-3 text-simba-dark font-mono tracking-widest"
-            placeholder="••••"
+            placeholder={t.checkout.placeholders.pin}
           />
         </div>
 
@@ -161,7 +163,7 @@ export default function CheckoutStep2({
               />
             </div>
             <p className="mt-2 text-center text-sm text-stone-500">
-              Processing payment...
+              {t.checkout.processing}
             </p>
           </div>
         )}
@@ -171,9 +173,7 @@ export default function CheckoutStep2({
           disabled={pin.length !== 4 || isProcessing}
           className="mt-6 w-full rounded-xl bg-simba-orange py-3 text-base font-semibold text-white transition-all hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-stone-300"
         >
-          {isProcessing
-            ? `Pay ${grandTotal.toLocaleString('en-RW')} RWF`
-            : `Pay ${grandTotal.toLocaleString('en-RW')} RWF`}
+          {t.checkout.pay} {formatPrice(grandTotal)} RWF
         </button>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/lib/cartContext';
+import { useTranslation } from '@/lib/i18n';
 import CheckoutStep1 from './CheckoutStep1';
 import CheckoutStep2 from './CheckoutStep2';
 import CheckoutStep3 from './CheckoutStep3';
@@ -17,6 +18,7 @@ interface DeliveryDetails {
 export default function CheckoutPage() {
   const router = useRouter();
   const { state, dispatch } = useCart();
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
   const [deliveryDetails, setDeliveryDetails] = useState<DeliveryDetails>({
@@ -39,9 +41,9 @@ export default function CheckoutPage() {
   if (!isMounted) return null;
 
   const steps = [
-    { num: 1, label: 'Delivery' },
-    { num: 2, label: 'Payment' },
-    { num: 3, label: 'Confirmed' },
+    { num: 1, label: t.checkout.delivery },
+    { num: 2, label: t.checkout.payment },
+    { num: 3, label: t.checkout.confirmed },
   ];
 
   const handleNext = (details: DeliveryDetails) => {

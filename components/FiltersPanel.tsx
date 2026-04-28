@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface FiltersPanelProps {
   maxPrice: number;
@@ -13,13 +14,6 @@ interface FiltersPanelProps {
   onSortChange: (value: string) => void;
 }
 
-const sortOptions = [
-  { value: 'default', label: 'Default' },
-  { value: 'price-asc', label: 'Price: Low to High' },
-  { value: 'price-desc', label: 'Price: High to Low' },
-  { value: 'name-asc', label: 'Name A–Z' },
-];
-
 export default function FiltersPanel({
   maxPrice,
   showInStockOnly,
@@ -29,6 +23,7 @@ export default function FiltersPanel({
   sortBy,
   onSortChange,
 }: FiltersPanelProps) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [localMin, setLocalMin] = useState(priceRange[0]);
   const [localMax, setLocalMax] = useState(priceRange[1]);
@@ -52,6 +47,13 @@ export default function FiltersPanel({
 
   const formatPrice = (price: number) => price.toLocaleString('en-RW');
 
+  const sortOptions = [
+    { value: 'default', label: t.filters.default },
+    { value: 'price-asc', label: t.filters.priceLowHigh },
+    { value: 'price-desc', label: t.filters.priceHighLow },
+    { value: 'name-asc', label: t.filters.nameAZ },
+  ];
+
   return (
     <div className="rounded-xl border border-stone-200 bg-white p-4">
       <button
@@ -60,7 +62,7 @@ export default function FiltersPanel({
       >
         <span className="flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4" />
-          Filters
+          {t.filters.sortBy}
         </span>
         {isOpen ? (
           <ChevronUp className="h-4 w-4" />
@@ -78,12 +80,12 @@ export default function FiltersPanel({
               onChange={(e) => onInStockChange(e.target.checked)}
               className="h-4 w-4 rounded border-stone-300 text-simba-orange focus:ring-simba-orange"
             />
-            In-stock only
+            {t.filters.inStockOnly}
           </label>
 
           <div className="space-y-2">
             <div className="text-sm font-medium text-simba-dark">
-              Price: RWF {formatPrice(localMin)} — {formatPrice(localMax)}
+              {t.filters.priceRange}: RWF {formatPrice(localMin)} — {formatPrice(localMax)}
             </div>
             <div className="flex gap-4">
               <div className="flex-1">
@@ -114,7 +116,7 @@ export default function FiltersPanel({
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-simba-dark">Sort by</label>
+            <label className="text-sm font-medium text-simba-dark">{t.filters.sortBy}</label>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value)}

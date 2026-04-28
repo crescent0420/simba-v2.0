@@ -1,7 +1,8 @@
 'use client';
 
 import { useRef } from 'react';
-import { LucideIcon, Sparkles, Droplets, Utensils, Baby, Home, Sparkle, Dumbbell, ShoppingBasket, Candy, Dog } from 'lucide-react';
+import { LucideIcon, Sparkles, Droplets, Utensils, Baby, Home, Sparkle, Dumbbell, ShoppingBasket, Dog } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface CategoryTabsProps {
   categories: string[];
@@ -10,18 +11,33 @@ interface CategoryTabsProps {
 }
 
 const categoryIcons: Record<string, LucideIcon> = {
-  All: Sparkles,
+  'All': Sparkles,
   'Alcoholic Drinks': ShoppingBasket,
   'Baby Products': Baby,
   'Cleaning & Sanitary': Droplets,
   'Cosmetics & Personal Care': Sparkle,
   'Food Products': Utensils,
-  General: ShoppingBasket,
-  Household: Home,
+  'General': ShoppingBasket,
+  'Household': Home,
   'Kitchen Storage': Utensils,
   'Kitchenware & Electronics': Droplets,
   'Pet Care': Dog,
   'Sports & Wellness': Dumbbell,
+};
+
+const categoryKeyMap: Record<string, string> = {
+  'All': 'all',
+  'Alcoholic Drinks': 'AlcoholicDrinks',
+  'Baby Products': 'BabyProducts',
+  'Cleaning & Sanitary': 'CleaningSanitary',
+  'Cosmetics & Personal Care': 'CosmeticsPersonalCare',
+  'Food Products': 'FoodProducts',
+  'General': 'General',
+  'Household': 'Household',
+  'Kitchen Storage': 'KitchenStorage',
+  'Kitchenware & Electronics': 'KitchenwareElectronics',
+  'Pet Care': 'PetCare',
+  'Sports & Wellness': 'SportsWellness',
 };
 
 export default function CategoryTabs({
@@ -29,6 +45,7 @@ export default function CategoryTabs({
   selected,
   onSelect,
 }: CategoryTabsProps) {
+  const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const allCategories = ['All', ...categories];
@@ -41,6 +58,8 @@ export default function CategoryTabs({
       {allCategories.map((category) => {
         const Icon = categoryIcons[category] || Sparkles;
         const isActive = selected === category;
+        const transKey = categoryKeyMap[category] || 'all';
+        const label = (t.categories as any)[transKey] || category;
 
         return (
           <button
@@ -53,7 +72,7 @@ export default function CategoryTabs({
             }`}
           >
             <Icon className="h-4 w-4" />
-            {category}
+            {label}
           </button>
         );
       })}

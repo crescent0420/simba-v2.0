@@ -4,6 +4,7 @@ import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/lib/cartContext';
+import { useTranslation } from '@/lib/i18n';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { state, dispatch } = useCart();
+  const { t } = useTranslation();
 
   const handleQuantityChange = (productId: number, delta: number) => {
     const item = state.items.find((i) => i.product.id === productId);
@@ -44,7 +46,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-stone-200 px-4 py-4">
-            <h2 className="text-lg font-bold text-simba-dark">Your Cart</h2>
+             <h2 className="text-lg font-bold text-simba-dark">{t.nav.cart}</h2>
             <button
               onClick={onClose}
               className="rounded-full p-2 text-stone-500 hover:bg-stone-100"
@@ -56,20 +58,20 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           {state.items.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center text-center">
               <ShoppingBag className="h-16 w-16 text-stone-300" />
-              <p className="mt-4 text-lg font-medium text-simba-dark">
-                Your cart is empty
-              </p>
-              <p className="text-sm text-stone-500">
-                Add some products to get started!
-              </p>
+               <p className="mt-4 text-lg font-medium text-simba-dark">
+                 {t.cart.empty}
+               </p>
+               <p className="text-sm text-stone-500">
+                 {t.cart.emptySubtitle}
+               </p>
               <button
                 onClick={onClose}
                 className="mt-6 rounded-xl bg-simba-orange px-6 py-2.5 text-sm font-semibold text-white"
               >
-                Continue shopping
-              </button>
-            </div>
-          ) : (
+                 {t.cart.continueShopping}
+               </button>
+             </div>
+           ) : (
             <>
               <div className="flex-1 overflow-y-auto px-4 py-4">
                 <div className="space-y-4">
@@ -133,8 +135,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </div>
 
               <div className="border-t border-stone-200 px-4 py-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="text-stone-600">Subtotal</span>
+                 <div className="mb-4 flex items-center justify-between">
+                   <span className="text-stone-600">{t.cart.subtotal}</span>
                   <span className="text-lg font-bold text-simba-dark">
                     {state.total.toLocaleString('en-RW')} RWF
                   </span>
@@ -144,14 +146,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   onClick={onClose}
                   className="block w-full rounded-xl bg-simba-orange py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-orange-700"
                 >
-                  Checkout
-                </Link>
+                   {t.cart.checkout}
+                 </Link>
                 <button
                   onClick={onClose}
                   className="mt-3 block w-full rounded-xl border border-stone-200 py-3 text-center text-sm font-medium text-simba-dark hover:bg-stone-50"
                 >
-                  Continue shopping
-                </button>
+                   {t.cart.continueShopping}
+                 </button>
               </div>
             </>
           )}

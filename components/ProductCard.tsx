@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Product } from '@/lib/types';
 import { useCart } from '@/lib/cartContext';
+import { useTranslation } from '@/lib/i18n';
 
 interface ProductCardProps {
   product: Product;
@@ -12,6 +13,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, onProductClick }: ProductCardProps) {
   const priceFormatted = product.price.toLocaleString('en-RW');
   const { dispatch } = useCart();
+  const { t } = useTranslation();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -48,7 +50,7 @@ export default function ProductCard({ product, onProductClick }: ProductCardProp
         {!product.inStock && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/70">
             <span className="rounded-full bg-stone-800 px-3 py-1 text-sm font-medium text-white">
-              Out of stock
+              {t.product.outOfStock}
             </span>
           </div>
         )}
@@ -61,16 +63,16 @@ export default function ProductCard({ product, onProductClick }: ProductCardProp
         <p className="mt-1 text-lg font-bold text-simba-orange">
           {priceFormatted} RWF
         </p>
-        <p className="text-xs text-stone-500">{product.unit}</p>
+        <p className="text-xs text-stone-500">{t.product.unit}: {product.unit}</p>
       </div>
 
-      <button
-        onClick={handleAddToCart}
-        disabled={!product.inStock}
-        className="mt-3 w-full rounded-xl bg-simba-orange py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
-      >
-        Add to cart
-      </button>
+        <button
+          onClick={handleAddToCart}
+          disabled={!product.inStock}
+          className="mt-3 w-full rounded-xl bg-simba-orange py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
+        >
+          {t.product.addToCart}
+        </button>
     </div>
   );
 }

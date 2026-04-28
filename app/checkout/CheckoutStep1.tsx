@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n';
 
 interface DeliveryDetails {
   fullName: string;
@@ -18,6 +19,7 @@ export default function CheckoutStep1({
   deliveryDetails,
   onNext,
 }: CheckoutStep1Props) {
+  const { t } = useTranslation();
   const [form, setForm] = useState<DeliveryDetails>(deliveryDetails);
   const [errors, setErrors] = useState<Partial<DeliveryDetails>>({});
 
@@ -28,11 +30,11 @@ export default function CheckoutStep1({
   const handleBlur = (field: keyof DeliveryDetails) => {
     const newErrors = { ...errors };
     if (field === 'fullName' && !form.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
+      newErrors.fullName = t.checkout.errors.nameRequired;
     } else if (field === 'phone' && !validatePhone(form.phone)) {
-      newErrors.phone = 'Enter a valid Rwanda phone (07XXXXXXXX)';
+      newErrors.phone = t.checkout.errors.phoneInvalid;
     } else if (field === 'address' && !form.address.trim()) {
-      newErrors.address = 'Address is required';
+      newErrors.address = t.checkout.errors.addressRequired;
     } else {
       delete newErrors[field];
     }
@@ -41,9 +43,9 @@ export default function CheckoutStep1({
 
   const handleSubmit = () => {
     const newErrors: Partial<DeliveryDetails> = {};
-    if (!form.fullName.trim()) newErrors.fullName = 'Full name is required';
-    if (!validatePhone(form.phone)) newErrors.phone = 'Enter a valid Rwanda phone (07XXXXXXXX)';
-    if (!form.address.trim()) newErrors.address = 'Address is required';
+    if (!form.fullName.trim()) newErrors.fullName = t.checkout.errors.nameRequired;
+    if (!validatePhone(form.phone)) newErrors.phone = t.checkout.errors.phoneInvalid;
+    if (!form.address.trim()) newErrors.address = t.checkout.errors.addressRequired;
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -58,12 +60,12 @@ export default function CheckoutStep1({
 
   return (
     <div className="rounded-2xl bg-white p-6 shadow-lg">
-      <h2 className="mb-6 text-lg font-bold text-simba-dark">Delivery Details</h2>
+      <h2 className="mb-6 text-lg font-bold text-simba-dark">{t.checkout.deliveryTitle}</h2>
 
       <div className="space-y-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-simba-dark">
-            Full Name *
+            {t.checkout.fields.fullName} *
           </label>
           <input
             type="text"
@@ -73,7 +75,7 @@ export default function CheckoutStep1({
             className={`w-full rounded-xl border px-4 py-3 text-simba-dark ${
               errors.fullName ? 'border-red-500' : 'border-stone-200'
             }`}
-            placeholder="John Doe"
+            placeholder={t.checkout.placeholders.name}
           />
           {errors.fullName && (
             <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
@@ -82,7 +84,7 @@ export default function CheckoutStep1({
 
         <div>
           <label className="mb-1 block text-sm font-medium text-simba-dark">
-            Phone Number *
+            {t.checkout.fields.phone} *
           </label>
           <input
             type="tel"
@@ -92,7 +94,7 @@ export default function CheckoutStep1({
             className={`w-full rounded-xl border px-4 py-3 text-simba-dark ${
               errors.phone ? 'border-red-500' : 'border-stone-200'
             }`}
-            placeholder="07XXXXXXXX"
+            placeholder={t.checkout.placeholders.phone}
           />
           {errors.phone && (
             <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
@@ -101,7 +103,7 @@ export default function CheckoutStep1({
 
         <div>
           <label className="mb-1 block text-sm font-medium text-simba-dark">
-            Kigali Sector/Address *
+            {t.checkout.fields.address} *
           </label>
           <input
             type="text"
@@ -111,7 +113,7 @@ export default function CheckoutStep1({
             className={`w-full rounded-xl border px-4 py-3 text-simba-dark ${
               errors.address ? 'border-red-500' : 'border-stone-200'
             }`}
-            placeholder="Kicukiro, Sector 12"
+            placeholder={t.checkout.placeholders.address}
           />
           {errors.address && (
             <p className="mt-1 text-sm text-red-500">{errors.address}</p>
@@ -120,13 +122,13 @@ export default function CheckoutStep1({
 
         <div>
           <label className="mb-1 block text-sm font-medium text-simba-dark">
-            Delivery Notes (optional)
+            {t.checkout.fields.notes}
           </label>
           <textarea
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             className="w-full rounded-xl border border-stone-200 px-4 py-3 text-simba-dark"
-            placeholder="Any special instructions..."
+            placeholder={t.checkout.placeholders.notes}
             rows={3}
           />
         </div>

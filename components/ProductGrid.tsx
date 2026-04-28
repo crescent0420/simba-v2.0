@@ -9,12 +9,14 @@ import SearchBar from './SearchBar';
 import FiltersPanel from './FiltersPanel';
 import ProductModal from './ProductModal';
 import { Frown } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface ProductGridProps {
   products: Product[];
 }
 
 export default function ProductGrid({ products }: ProductGridProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showInStockOnly, setShowInStockOnly] = useState(false);
@@ -100,9 +102,9 @@ export default function ProductGrid({ products }: ProductGridProps) {
         onSelect={setSelectedCategory}
       />
 
-      <div className="text-sm text-stone-600">
-        Showing {filteredProducts.length} products
-      </div>
+       <div className="text-sm text-stone-600">
+         {t.showing.replace('{count}', filteredProducts.length.toString())} {t.products}
+       </div>
 
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
@@ -117,12 +119,12 @@ export default function ProductGrid({ products }: ProductGridProps) {
       ) : (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <Frown className="h-12 w-12 text-stone-400" />
-          <p className="mt-4 text-lg font-medium text-simba-dark">
-            No products found
-          </p>
-          <p className="text-sm text-stone-500">
-            Try adjusting your filters.
-          </p>
+           <p className="mt-4 text-lg font-medium text-simba-dark">
+             {t.empty.noResults}
+           </p>
+           <p className="text-sm text-stone-500">
+             {t.empty.adjustFilters}
+           </p>
         </div>
       )}
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useCart } from '@/lib/cartContext';
+import { useTranslation } from '@/lib/i18n';
 import { Check } from 'lucide-react';
 
 interface DeliveryDetails {
@@ -18,6 +19,7 @@ interface CheckoutStep3Props {
 
 export default function CheckoutStep3({ deliveryDetails, onBackToShopping }: CheckoutStep3Props) {
   const { state } = useCart();
+  const { t } = useTranslation();
   const [orderNumber, setOrderNumber] = useState('');
   const [showCheckmark, setShowCheckmark] = useState(false);
 
@@ -71,14 +73,14 @@ export default function CheckoutStep3({ deliveryDetails, onBackToShopping }: Che
       </div>
 
       <h2 className="mb-2 text-2xl font-bold text-simba-dark">
-        Order confirmed!
+        {t.checkout.orderConfirmed}
       </h2>
       <p className="mb-6 text-stone-500">
-        Thank you for your order. You will receive an SMS confirmation shortly.
+        {t.checkout.orderConfirmedSubtitle}
       </p>
 
       <div className="mb-6 rounded-xl bg-simba-cream p-4 text-left">
-        <p className="mb-2 text-sm text-stone-500">Order Number</p>
+        <p className="mb-2 text-sm text-stone-500">{t.checkout.orderNumber}</p>
         <p className="text-xl font-bold text-simba-dark">
           #{orderNumber || '...'}
         </p>
@@ -95,7 +97,7 @@ export default function CheckoutStep3({ deliveryDetails, onBackToShopping }: Che
             </div>
           ))}
           <div className="flex justify-between border-t border-stone-200 pt-2 font-bold">
-            <span className="text-simba-dark">Total</span>
+            <span className="text-simba-dark">{t.checkout.total}</span>
             <span className="text-simba-orange">
               {grandTotal.toLocaleString('en-RW')} RWF
             </span>
@@ -107,7 +109,7 @@ export default function CheckoutStep3({ deliveryDetails, onBackToShopping }: Che
         onClick={onBackToShopping}
         className="w-full rounded-xl bg-simba-orange py-3 text-base font-semibold text-white transition-all hover:bg-orange-700"
       >
-        Back to shopping
+        {t.checkout.backToShopping}
       </button>
     </div>
   );
