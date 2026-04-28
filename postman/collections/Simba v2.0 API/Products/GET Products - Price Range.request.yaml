@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseURL}}/api/products?minPrice=100&maxPrice=500"
+method: GET
+queryParams:
+  minPrice: "100"
+  maxPrice: "500"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("All products are within the price range", function () {
+          const json = pm.response.json();
+          json.products.forEach(p => {
+              pm.expect(p.price).to.be.at.least(100);
+              pm.expect(p.price).to.be.at.most(500);
+          });
+      });
+    language: text/javascript
+order: 5000

@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseURL}}/api/products?category=Fruits"
+method: GET
+queryParams:
+  category: Fruits
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("All returned products belong to the filtered category", function () {
+          const json = pm.response.json();
+          json.products.forEach(p => {
+              pm.expect(p.category).to.eql("Fruits");
+          });
+      });
+    language: text/javascript
+order: 2000

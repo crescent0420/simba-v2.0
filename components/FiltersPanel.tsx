@@ -1,0 +1,134 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
+
+interface FiltersPanelProps {
+  maxPrice: number;
+  showInStockOnly: boolean;
+  onInStockChange: (value: boolean) => void;
+  priceRange: [number, number];
+  onPriceRangeChange: (value: [number, number]) => void;
+  sortBy: string;
+  onSortChange: (value: string) => void;
+}
+
+const sortOptions = [
+  { value: 'default', label: 'Default' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
+  { value: 'name-asc', label: 'Name A–Z' },
+];
+
+export default function FiltersPanel({
+  maxPrice,
+  showInStockOnly,
+  onInStockChange,
+  priceRange,
+  onPriceRangeChange,
+  sortBy,
+  onSortChange,
+}: FiltersPanelProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [localMin, setLocalMin] = useState(priceRange[0]);
+  const [localMax, setLocalMax] = useState(priceRange[1]);
+
+  useEffect(() => {
+    setLocalMin(priceRange[0]);
+    setLocalMax(priceRange[1]);
+  }, [priceRange]);
+
+  const handleMinChange = (value: number) => {
+    const newMin = Math.min(value, localMax - 1000);
+    setLocalMin(newMin);
+    onPriceRangeChange([newMin, localMax]);
+  };
+
+  const handleMaxChange = (value: number) => {
+    const newMax = Math.max(value, localMin + 1000);
+    setLocalMax(newMax);
+    onPriceRangeChange([localMin, newMax]);
+  };
+
+  const formatPrice = (price: number) => price.toLocaleString('en-RW');
+
+  return (
+    <div className="rounded-xl border border-stone-200 bg-white p-4">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex w-full items-center justify-between text-sm font-medium text-simba-dark"
+      >
+        <span className="flex items-center gap-2">
+          <SlidersHorizontal className="h-4 w-4" />
+          Filters
+        </span>
+        {isOpen ? (
+          <ChevronUp className="h-4 w-4" />
+        ) : (
+          <ChevronDown className="h-4 w-4" />
+        )}
+      </button>
+
+      {isOpen && (
+        <div className="mt-4 space-y-4">
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-simba-dark">
+            <input
+              type="checkbox"
+              checked={showInStockOnly}
+              onChange={(e) => onInStockChange(e.target.checked)}
+              className="h-4 w-4 rounded border-stone-300 text-simba-orange focus:ring-simba-orange"
+            />
+            In-stock only
+          </label>
+
+          <div className="space-y-2">
+            <div className="text-sm font-medium text-simba-dark">
+              Price: RWF {formatPrice(localMin)} — {formatPrice(localMax)}
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label className="text-xs text-stone-500">Min</label>
+                <input
+                  type="range"
+                  min={0}
+                  max={maxPrice}
+                  step={1000}
+                  value={localMin}
+                  onChange={(e) => handleMinChange(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-xs text-stone-500">Max</label>
+                <input
+                  type="range"
+                  min={0}
+                  max={maxPrice}
+                  step={1000}
+                  value={localMax}
+                  onChange={(e) => handleMaxChange(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-simba-dark">Sort by</label>
+            <select
+              value={sortBy}
+              onChange={(e) => onSortChange(e.target.value)}
+              className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm text-simba-dark focus:border-simba-orange focus:outline-none"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

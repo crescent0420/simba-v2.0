@@ -1,0 +1,4 @@
+name: Simba - Production
+values:
+  - key: baseURL
+    value: 'https://simba-v2.vercel.app'

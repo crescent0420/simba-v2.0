@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseURL}}/api/products?search=apple"
+method: GET
+queryParams:
+  search: apple
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("All returned products match the search term", function () {
+          const json = pm.response.json();
+          json.products.forEach(p => {
+              pm.expect(p.name.toLowerCase()).to.include("apple");
+          });
+      });
+    language: text/javascript
+order: 3000

@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseURL}}/api/orders"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "items": [
+        {
+          "product": { "id": 1, "name": "Apple", "price": 200 },
+          "quantity": 2
+        }
+      ],
+      "total": 400
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 400", function () {
+          pm.response.to.have.status(400);
+      });
+      pm.test("Error message mentions delivery details", function () {
+          const json = pm.response.json();
+          pm.expect(json.error).to.include('Delivery details');
+      });
+    language: text/javascript
+order: 3000

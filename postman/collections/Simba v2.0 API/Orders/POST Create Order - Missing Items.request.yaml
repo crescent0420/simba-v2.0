@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseURL}}/api/orders"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "items": [],
+      "deliveryDetails": {
+        "fullName": "Ishimwe Crescent",
+        "phone": "0781234567",
+        "address": "KG 123 St, Kigali"
+      },
+      "total": 400
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 400", function () {
+          pm.response.to.have.status(400);
+      });
+      pm.test("Error message mentions items", function () {
+          const json = pm.response.json();
+          pm.expect(json.error).to.include('Items');
+      });
+    language: text/javascript
+order: 2000

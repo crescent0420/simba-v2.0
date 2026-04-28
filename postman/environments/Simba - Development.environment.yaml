@@ -1,0 +1,4 @@
+name: Simba - Development
+values:
+  - key: baseURL
+    value: 'http://localhost:3000'

@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{baseURL}}/api/checkout/momo"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "phone": "0991234567",
+      "pin": "1234",
+      "amount": 400
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 400", function () {
+          pm.response.to.have.status(400);
+      });
+      pm.test("Error message mentions phone number", function () {
+          const json = pm.response.json();
+          pm.expect(json.error).to.include('phone');
+      });
+    language: text/javascript
+order: 2000
