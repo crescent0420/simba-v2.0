@@ -1,24 +1,26 @@
 'use client';
 
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from '@/lib/cartContext';
 import { useTranslation, Language } from '@/lib/i18n';
+import { useTheme } from '@/lib/theme';
 import CartDrawer from './CartDrawer';
 
 export default function Header() {
   const { state } = useCart();
   const { language, setLanguage, t } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const itemCount = state.items.reduce((sum, item) => sum + item.quantity, 0);
 
   const languages: Language[] = ['en', 'fr', 'rw'];
-  const labels = { en: 'EN', fr: 'FR', rw: 'RW' };
+  const langLabels = { en: 'EN', fr: 'FR', rw: 'RW' };
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-simba-orange px-4 py-4 shadow-md">
+      <header className="sticky top-0 z-50 bg-simba-orange/95 backdrop-blur-md px-4 py-4 shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <h1 className="text-xl font-bold text-white">Simba Supermarket</h1>
           <div className="flex items-center gap-3">
@@ -33,10 +35,23 @@ export default function Header() {
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
-                  {labels[lang]}
+                  {langLabels[lang]}
                 </button>
               ))}
             </div>
+            
+            <button
+              onClick={toggleTheme}
+              className="relative rounded-full bg-white/20 p-2 text-white transition-colors hover:bg-white/30"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'light' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </button>
+            
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative rounded-full bg-white/20 p-2 text-white transition-colors hover:bg-white/30"

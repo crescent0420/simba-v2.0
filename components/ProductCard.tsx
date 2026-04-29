@@ -12,8 +12,12 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onProductClick }: ProductCardProps) {
   const priceFormatted = product.price.toLocaleString('en-RW');
-  const { dispatch } = useCart();
+  const { state, dispatch } = useCart();
   const { t } = useTranslation();
+
+  const cartItem = state.items.find(item => item.product.id === product.id);
+  const inCartQuantity = cartItem?.quantity || 0;
+  const isNew = product.id > 23000;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -27,9 +31,9 @@ export default function ProductCard({ product, onProductClick }: ProductCardProp
   return (
     <div
       onClick={handleCardClick}
-      className="group flex flex-col rounded-2xl border border-stone-200 bg-white p-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+      className="group relative flex flex-col rounded-2xl border border-stone-200 bg-white dark:bg-[#1e1e1e] dark:border-[#2a2a2a] p-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
     >
-      <div className="relative flex h-40 w-full items-center justify-center overflow-hidden rounded-xl bg-simba-cream">
+      <div className="relative flex h-40 w-full items-center justify-center overflow-hidden rounded-xl bg-simba-cream dark:bg-[#252525]">
         {product.image ? (
           <Image
             src={product.image}
@@ -47,29 +51,44 @@ export default function ProductCard({ product, onProductClick }: ProductCardProp
             />
           </div>
         )}
+        
+        {inCartQuantity > 0 && (
+          <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-simba-orange text-xs font-bold text-white">
+            {inCartQuantity}
+          </span>
+        )}
+        
         {!product.inStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/70">
+          <div className="absolute inset-0 flex items-center justify-center bg-white/70 dark:bg-[#111]/70">
             <span className="rounded-full bg-stone-800 px-3 py-1 text-sm font-medium text-white">
               {t.product.outOfStock}
+            </span>
+          </div>
+        )}
+        
+        {isNew && (
+          <div className="absolute left-2 top-2">
+            <span className="rounded-full bg-green-500 px-2 py-0.5 text-xs font-bold text-white">
+              NEW
             </span>
           </div>
         )}
       </div>
 
       <div className="mt-3 flex flex-1 flex-col">
-        <h3 className="line-clamp-2 text-sm font-medium text-simba-dark">
+        <h3 className="line-clamp-2 text-sm font-medium text-simba-dark dark:text-[#f0f0f0]">
           {product.name}
         </h3>
         <p className="mt-1 text-lg font-bold text-simba-orange">
           {priceFormatted} RWF
         </p>
-        <p className="text-xs text-stone-500">{t.product.unit}: {product.unit}</p>
+        <p className="text-xs text-stone-500 dark:text-[#aaa]">{t.product.unit}: {product.unit}</p>
       </div>
 
         <button
           onClick={handleAddToCart}
           disabled={!product.inStock}
-          className="mt-3 w-full rounded-xl bg-simba-orange py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
+          className="mt-3 w-full rounded-xl bg-simba-orange py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500 dark:disabled:bg-[#444] dark:disabled:text-[#888]"
         >
           {t.product.addToCart}
         </button>

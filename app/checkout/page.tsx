@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Home, ShoppingCart, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
 import { useTranslation } from '@/lib/i18n';
+import { useTheme } from '@/lib/theme';
 import CheckoutStep1 from './CheckoutStep1';
 import CheckoutStep2 from './CheckoutStep2';
 import CheckoutStep3 from './CheckoutStep3';
@@ -18,7 +21,8 @@ interface DeliveryDetails {
 export default function CheckoutPage() {
   const router = useRouter();
   const { state, dispatch } = useCart();
-  const { t } = useTranslation();
+  const { t, language, setLanguage, isMounted: langMounted } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
   const [step, setStep] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
   const [deliveryDetails, setDeliveryDetails] = useState<DeliveryDetails>({
@@ -60,11 +64,47 @@ export default function CheckoutPage() {
     router.push('/');
   };
 
+  const languages: ('en' | 'fr' | 'rw')[] = ['en', 'fr', 'rw'];
+  const langLabels = { en: 'EN', fr: 'FR', rw: 'RW' as const };
+
   return (
-    <div className="min-h-screen bg-simba-cream">
+    <div className="min-h-screen bg-simba-cream dark:bg-[#111111]">
       <header className="sticky top-0 z-40 bg-simba-orange px-4 py-4 shadow-md">
-        <div className="mx-auto max-w-2xl">
-          <h1 className="text-xl font-bold text-white">Checkout</h1>
+        <div className="mx-auto max-w-2xl flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-2 text-white hover:text-white/80">
+              <Home className="h-5 w-5" />
+            </Link>
+            <h1 className="text-xl font-bold text-white">Checkout</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1">
+              {languages.map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
+                    language === lang
+                      ? 'bg-white text-simba-orange'
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                >
+                  {langLabels[lang]}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={toggleTheme}
+              className="relative rounded-full bg-white/20 p-2 text-white transition-colors hover:bg-white/30"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'light' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 

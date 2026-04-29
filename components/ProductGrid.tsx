@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, use } from 'react';
 import { Product } from '@/lib/types';
 import { getCategories } from '@/lib/products';
 import ProductCard from './ProductCard';
@@ -10,6 +10,7 @@ import FiltersPanel from './FiltersPanel';
 import ProductModal from './ProductModal';
 import { Frown } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
+import { CATEGORY_BANNERS } from '@/lib/banners';
 
 interface ProductGridProps {
   products: Product[];
@@ -80,8 +81,24 @@ export default function ProductGrid({ products }: ProductGridProps) {
     setSelectedProduct(null);
   };
 
+  const bannerUrl = CATEGORY_BANNERS[selectedCategory] || CATEGORY_BANNERS['All'];
+
   return (
     <div className="flex flex-col gap-4">
+      {selectedCategory !== 'All' && (
+        <div className="relative h-48 w-full overflow-hidden rounded-2xl">
+          <img
+            src={bannerUrl}
+            alt={selectedCategory}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="absolute bottom-4 left-4">
+            <h2 className="text-3xl font-bold text-white">{selectedCategory}</h2>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
@@ -102,7 +119,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
         onSelect={setSelectedCategory}
       />
 
-       <div className="text-sm text-stone-600">
+       <div className="text-sm text-stone-600 dark:text-stone-400">
          {t.showing.replace('{count}', filteredProducts.length.toString())} {t.products}
        </div>
 
@@ -119,10 +136,10 @@ export default function ProductGrid({ products }: ProductGridProps) {
       ) : (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <Frown className="h-12 w-12 text-stone-400" />
-           <p className="mt-4 text-lg font-medium text-simba-dark">
+           <p className="mt-4 text-lg font-medium text-simba-dark dark:text-white">
              {t.empty.noResults}
            </p>
-           <p className="text-sm text-stone-500">
+           <p className="text-sm text-stone-500 dark:text-stone-400">
              {t.empty.adjustFilters}
            </p>
         </div>

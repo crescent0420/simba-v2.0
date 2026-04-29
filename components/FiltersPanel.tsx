@@ -55,10 +55,10 @@ export default function FiltersPanel({
   ];
 
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-4">
+    <div className="rounded-xl border border-stone-200 dark:border-[#2a2a2a] bg-white dark:bg-[#1e1e1e] p-4 transition-all duration-300">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between text-sm font-medium text-simba-dark"
+        className="flex w-full items-center justify-between text-sm font-medium text-simba-dark dark:text-[#f0f0f0]"
       >
         <span className="flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4" />
@@ -72,8 +72,8 @@ export default function FiltersPanel({
       </button>
 
       {isOpen && (
-        <div className="mt-4 space-y-4">
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-simba-dark">
+        <div className="mt-4 space-y-4 animate-fade-in">
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-simba-dark dark:text-[#f0f0f0]">
             <input
               type="checkbox"
               checked={showInStockOnly}
@@ -84,12 +84,12 @@ export default function FiltersPanel({
           </label>
 
           <div className="space-y-2">
-            <div className="text-sm font-medium text-simba-dark">
+            <div className="text-sm font-medium text-simba-dark dark:text-[#f0f0f0]">
               {t.filters.priceRange}: RWF {formatPrice(localMin)} — {formatPrice(localMax)}
             </div>
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="text-xs text-stone-500">Min</label>
+                <label className="text-xs text-stone-500 dark:text-[#aaa]">Min</label>
                 <input
                   type="range"
                   min={0}
@@ -97,11 +97,11 @@ export default function FiltersPanel({
                   step={1000}
                   value={localMin}
                   onChange={(e) => handleMinChange(Number(e.target.value))}
-                  className="w-full"
+                  className="w-full accent-simba-orange"
                 />
               </div>
               <div className="flex-1">
-                <label className="text-xs text-stone-500">Max</label>
+                <label className="text-xs text-stone-500 dark:text-[#aaa]">Max</label>
                 <input
                   type="range"
                   min={0}
@@ -109,18 +109,18 @@ export default function FiltersPanel({
                   step={1000}
                   value={localMax}
                   onChange={(e) => handleMaxChange(Number(e.target.value))}
-                  className="w-full"
+                  className="w-full accent-simba-orange"
                 />
               </div>
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-simba-dark">{t.filters.sortBy}</label>
+            <label className="text-sm font-medium text-simba-dark dark:text-[#f0f0f0]">{t.filters.sortBy}</label>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value)}
-              className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm text-simba-dark focus:border-simba-orange focus:outline-none"
+              className="w-full rounded-lg border border-stone-200 dark:border-[#333] bg-white dark:bg-[#151515] px-3 py-2 text-sm text-simba-dark dark:text-[#f0f0f0] focus:border-simba-orange focus:outline-none"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
