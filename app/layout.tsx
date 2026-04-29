@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans, Instrument_Serif } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import './globals.css';
@@ -15,11 +15,16 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: 'Simba Supermarket',
-  description: "Rwanda's Online Supermarket",
+  title: 'Simba 2.0 — Rwanda\'s Online Supermarket',
+  description: 'Shop 789 products from Simba Supermarket Kigali. Fast delivery across Rwanda.',
   icons: {
     icon: '/icon.svg',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -29,6 +34,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>" />
+      </head>
       <body className={`${plusJakartaSans.variable} ${instrumentSerif.variable} antialiased`}>
         <Providers>{children}</Providers>
       </body>
