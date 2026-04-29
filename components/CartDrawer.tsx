@@ -80,15 +80,16 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                      key={item.product.id}
                      className="flex gap-4 rounded-xl border border-stone-200 dark:border-[#2a2a2a] p-3"
                    >
-                     <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-simba-cream dark:bg-[#252525]">
-                       {item.product.image ? (
-                         <Image
-                           src={item.product.image}
-                           alt={item.product.name}
-                           fill
-                           className="object-contain p-1"
-                         />
-                       ) : (
+<div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-simba-cream dark:bg-[#252525]">
+                        {item.product.image ? (
+                          <Image
+                            src={item.product.image}
+                            alt={item.product.name}
+                            fill
+                            className="object-contain p-1"
+                            sizes="80px"
+                          />
+                        ) : (
                          <div className="flex h-full w-full items-center justify-center text-xs text-stone-400">
                            No Image
                          </div>

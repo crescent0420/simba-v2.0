@@ -14,12 +14,13 @@ import { CATEGORY_BANNERS } from '@/lib/banners';
 
 interface ProductGridProps {
   products: Product[];
+  initialCategory?: string;
 }
 
-export default function ProductGrid({ products }: ProductGridProps) {
+export default function ProductGrid({ products, initialCategory = 'All' }: ProductGridProps) {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [showInStockOnly, setShowInStockOnly] = useState(false);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
   const [sortBy, setSortBy] = useState('default');
@@ -35,6 +36,12 @@ export default function ProductGrid({ products }: ProductGridProps) {
   useEffect(() => {
     setPriceRange([0, maxPrice]);
   }, [maxPrice]);
+
+  useEffect(() => {
+    if (initialCategory && initialCategory !== 'All') {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -84,7 +91,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
   const bannerUrl = CATEGORY_BANNERS[selectedCategory] || CATEGORY_BANNERS['All'];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 rounded-2xl border border-stone-200 dark:border-[#333] bg-white dark:bg-[#111] p-4">
       {selectedCategory !== 'All' && (
         <div className="relative h-48 w-full overflow-hidden rounded-2xl">
           <img

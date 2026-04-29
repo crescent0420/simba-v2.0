@@ -73,6 +73,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
               alt={product.name}
               fill
               className="object-contain p-4"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-stone-400">
